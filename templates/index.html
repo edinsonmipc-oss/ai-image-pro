@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Image Pro — Remove backgrounds, upscale images</title>
+<script src="https://js.stripe.com/v3/"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f8fafc;color:#0f172a}
+.container{max-width:720px;margin:0 auto;padding:24px}
+header{text-align:center;padding:48px 0 32px}
+header h1{font-size:40px;font-weight:900;letter-spacing:-1px}
+header h1 span{background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.card{background:white;border-radius:16px;border:1px solid #e2e8f0;padding:32px}
+.upload-zone{border:2px dashed #cbd5e1;border-radius:12px;padding:48px;text-align:center;cursor:pointer;transition:all .3s;background:#f8fafc}
+.upload-zone:hover{border-color:#2563eb;background:#eff6ff}
+.upload-zone .icon{font-size:48px;margin-bottom:16px}
+.upload-zone h3{font-size:18px;font-weight:700}
+.op-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.op-btn{padding:14px;border:2px solid #e2e8f0;border-radius:10px;background:white;cursor:pointer;font-weight:600;text-align:center}
+.op-btn.selected{border-color:#2563eb;background:#eff6ff;color:#2563eb}
+.process-btn{width:100%;padding:16px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;font-size:16px;font-weight:700;border:none;border-radius:12px;cursor:pointer;margin-top:12px}
+.process-btn:disabled{opacity:.5}
+.remaining{text-align:center;font-size:13px;color:#64748b;margin:12px 0}
+.pricing-box{margin-top:48px;text-align:center;padding:32px;background:white;border-radius:16px;border:2px solid #2563eb}
+.price{font-size:36px;font-weight:900;color:#2563eb}
+.sub-btn{padding:14px 40px;background:#2563eb;color:white;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px}
+.result-box{display:none;margin-top:20px;text-align:center}
+.dl-btn{display:inline-block;padding:12px 28px;background:#22c55e;color:white;border-radius:8px;font-weight:700;text-decoration:none;margin-top:12px}
+footer{text-align:center;padding:48px 0;color:#94a3b8;font-size:13px}
+.error{display:none;padding:16px;background:#fef2f2;border:1px solid #ef4444;border-radius:10px;color:#991b1b;margin-top:16px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="container">
+<header><h1>AI <span>Image Pro</span></h1><p>Remove backgrounds, upscale images & edit photos with AI</p></header>
+<div class="card">
+<div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+<div class="icon">Upload</div>
+<h3>Drop your image here</h3><p style="color:#64748b;font-size:14px;margin-top:4px;">or click to browse</p>
+<p style="font-size:12px;color:#94a3b8;margin-top:8px;">JPG, PNG, WebP — Max 10MB</p>
+<input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(this)"/>
+</div>
+<div id="fileName" style="display:none;padding:12px;background:#eff6ff;border-radius:8px;margin-top:12px;font-weight:600;font-size:14px;"></div>
+<div class="op-btns">
+<div class="op-btn selected" data-op="remove-bg" onclick="selectOp(this)">Remove Background</div>
+<div class="op-btn" data-op="upscale" onclick="selectOp(this)">Upscale Image</div>
+</div>
+<div class="remaining" id="remaining">Free: <strong>2</strong> image processes left</div>
+<button class="process-btn" id="processBtn" onclick="processImage()">Process Image</button>
+<div class="error" id="error"></div>
+<div class="result-box" id="resultBox">
+<p style="font-size:48px;margin-bottom:8px;">Done!</p>
+<p style="color:#166534;font-weight:600;margin-bottom:8px;">Your image is ready</p>
+<a class="dl-btn" id="downloadBtn" href="#">Download Result</a>
+</div>
+</div>
+<div class="pricing-box" id="pricing">
+<h2 style="font-size:24px;font-weight:800;">Unlock Unlimited</h2>
+<p style="color:#64748b;margin:8px 0;">Unlimited image processing + priority support</p>
+<div class="price">$7.99 <span style="font-size:16px;font-weight:400;color:#64748b;">/ month</span></div>
+<button class="sub-btn" onclick="subscribe()">Subscribe Now</button>
+</div>
+<footer><p>AI Image Pro · Secure payments via Stripe</p></footer>
+</div>
+<script>
+let stripe=null;try{stripe=Stripe('{{stripe_key}}');}catch(e){}
+let selectedFile=null;
+
+function handleFile(i){selectedFile=i.files[0];if(selectedFile){document.getElementById('fileName').style.display='block';
+document.getElementById('fileName').textContent='Selected: '+selectedFile.name+' ('+(selectedFile.size/1024).toFixed(1)+' KB)';}}
+function selectOp(el){document.querySelectorAll('.op-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');}
+async function processImage(){if(!selectedFile){showError('Select an image first');return;}
+const btn=document.getElementById('processBtn');btn.disabled=true;btn.textContent='Processing...';hideError();
+const fd=new FormData();fd.append('image',selectedFile);fd.append('operation',document.querySelector('.op-btn.selected').dataset.op);
+try{const res=await fetch('/process-image',{method:'POST',body:fd});const data=await res.json();
+if(data.success){document.getElementById('remaining').innerHTML='Free: <strong>'+data.processes_remaining+'</strong> image processes left';
+document.getElementById('resultBox').style.display='block';document.getElementById('downloadBtn').href=data.result_url;
+if(data.processes_remaining<=0){document.getElementById('pricing').scrollIntoView({behavior:'smooth'});}}
+else if(data.requires_payment){showError('Free limit reached. Subscribe.');document.getElementById('pricing').scrollIntoView({behavior:'smooth'});}
+else{showError(data.error||'Processing failed');}}catch(e){showError('Connection error');}
+btn.disabled=false;btn.textContent='Process Image';}
+function subscribe(){if(!stripe){showError('Payment loading...');return;}
+fetch('/create-checkout',{method:'POST'}).then(r=>r.json()).then(d=>{if(d.url)window.location.href=d.url;}).catch(e=>showError('Error'));}
+function showError(msg){const el=document.getElementById('error');el.textContent=msg;el.style.display='block';}
+function hideError(){document.getElementById('error').style.display='none';}
+</script>
+</body>
+</html>
