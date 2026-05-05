@@ -6,997 +6,544 @@
   <title>AI Image Pro — Remove Backgrounds, Upscale & Transform Images with AI</title>
   <meta name="description" content="AI Image Pro lets you remove backgrounds, upscale, and transform your images in seconds. Free 2 processes. One-time payment of $12.99 AUD unlocks unlimited use forever.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* --- Reset & Base --- */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0a0a1a;
-      color: #e4e4f0;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;background:#0A0A0F;color:#e4e4f0;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+    .section{padding:100px 0;position:relative}
+    .section-title{text-align:center;margin-bottom:60px}
+    .section-title h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;background:linear-gradient(135deg,#7C3AED,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px}
+    .section-title p{font-size:1.1rem;color:#8b8ba0;max-width:560px;margin:0 auto}
+    .glow-btn{display:inline-block;background:linear-gradient(135deg,#7C3AED,#3B82F6);color:#fff;padding:14px 36px;border-radius:100px;font-weight:600;font-size:15px;border:none;cursor:pointer;transition:transform .25s,box-shadow .25s;position:relative;overflow:hidden;white-space:nowrap}
+    .glow-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,58,237,0.4)}
+    .glow-btn:active{transform:translateY(0)}
+    .glow-btn-outline{background:transparent;border:1.5px solid rgba(124,58,237,0.5);color:#c4b5fd;padding:14px 36px;border-radius:100px;font-weight:600;font-size:15px;cursor:pointer;transition:all .25s;display:inline-block}
+    .glow-btn-outline:hover{background:rgba(124,58,237,0.1);border-color:#7C3AED;box-shadow:0 0 20px rgba(124,58,237,0.2)}
 
-    /* --- Container --- */
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    /* ===== NAV ===== */
+    nav{position:fixed;top:0;left:0;width:100%;z-index:1000;padding:14px 0;background:rgba(10,10,15,0.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(124,58,237,0.12);transition:background .3s}
+    nav .container{display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .logo svg{width:28px;height:28px;flex-shrink:0}
+    .nav-links{display:flex;gap:32px;align-items:center}
+    .nav-links a{font-size:14px;font-weight:500;color:#a5a5b8;transition:color .2s}
+    .nav-links a:hover{color:#c4b5fd}
+    .nav-cta{background:linear-gradient(135deg,#7C3AED,#3B82F6);color:#fff;padding:10px 24px;border-radius:100px;font-weight:600;font-size:14px;transition:transform .2s,box-shadow .2s;display:inline-block}
+    .nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,0.4);color:#fff!important}
 
-    /* --- Navigation --- */
-    nav {
-      position: fixed; top: 0; left: 0; width: 100%;
-      z-index: 1000; padding: 16px 0;
-      background: rgba(10,10,26,0.8);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(139,92,246,0.15);
-    }
-    nav .container {
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .logo {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 22px; font-weight: 800;
-      background: linear-gradient(135deg, #a78bfa, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .logo svg { width: 28px; height: 28px; }
-    .nav-cta {
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      color: #fff; padding: 10px 24px; border-radius: 100px;
-      font-weight: 600; font-size: 14px;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: inline-block;
-    }
-    .nav-cta:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(124,58,237,0.4);
-    }
+    /* ===== HERO ===== */
+    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:120px 0 80px}
+    .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 600px 400px at 20% 40%,rgba(124,58,237,0.15),transparent),radial-gradient(ellipse 500px 350px at 80% 60%,rgba(59,130,246,0.12),transparent),radial-gradient(ellipse 300px 300px at 50% 20%,rgba(139,92,246,0.08),transparent)}
+    .hero-orbs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .hero-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5;animation:orbFloat 8s ease-in-out infinite}
+    .hero-orb:nth-child(1){width:400px;height:400px;background:rgba(124,58,237,0.25);top:-5%;left:-5%;animation-delay:0s}
+    .hero-orb:nth-child(2){width:350px;height:350px;background:rgba(59,130,246,0.2);bottom:-10%;right:-5%;animation-delay:-3s}
+    .hero-orb:nth-child(3){width:200px;height:200px;background:rgba(139,92,246,0.15);top:30%;left:60%;animation-delay:-6s}
+    @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-30px) scale(1.1)}66%{transform:translate(-20px,20px) scale(.95)}}
+    .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(139,92,246,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%)}
+    .hero-content{position:relative;z-index:2;text-align:center;max-width:800px}
+    .hero-badge{display:inline-block;padding:6px 16px;border-radius:100px;font-size:13px;font-weight:500;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.2);color:#a78bfa;margin-bottom:24px}
+    .hero h1{font-size:clamp(2.4rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:20px;letter-spacing:-.02em}
+    .hero h1 .gradient-text{background:linear-gradient(135deg,#7C3AED,#3B82F6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p{font-size:clamp(1rem,2vw,1.25rem);color:#8b8ba0;max-width:600px;margin:0 auto 36px;line-height:1.7}
+    .hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+    .hero-stats{display:flex;justify-content:center;gap:40px;margin-top:60px;flex-wrap:wrap}
+    .hero-stat{text-align:center}
+    .hero-stat .num{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-stat .label{font-size:13px;color:#6b6b80;margin-top:4px}
 
-    /* --- Hero --- */
-    .hero {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; overflow: hidden;
-      padding: 120px 0 80px;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: url('https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=1920&h=1080&fit=crop') center/cover no-repeat;
-      filter: brightness(0.25) saturate(1.2);
-      transform: scale(1.05);
-    }
-    .hero-overlay {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 30% 50%, rgba(124,58,237,0.25) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 50%, rgba(59,130,246,0.2) 0%, transparent 60%);
-    }
-    .hero-grid {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(139,92,246,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139,92,246,0.06) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-    .hero .container {
-      position: relative; z-index: 2; text-align: center;
-    }
-    .hero-badge {
-      display: inline-block;
-      background: rgba(139,92,246,0.15);
-      border: 1px solid rgba(139,92,246,0.3);
-      padding: 6px 18px; border-radius: 100px;
-      font-size: 13px; font-weight: 600; color: #a78bfa;
-      margin-bottom: 28px; letter-spacing: 0.3px;
-    }
-    .hero h1 {
-      font-size: clamp(40px, 7vw, 72px); font-weight: 900;
-      line-height: 1.08; margin-bottom: 20px;
-      background: linear-gradient(135deg, #c4b5fd 0%, #818cf8 40%, #60a5fa 70%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero p {
-      font-size: clamp(17px, 2vw, 22px); color: #a0a0c0;
-      max-width: 620px; margin: 0 auto 36px;
-      font-weight: 400;
-    }
-    .hero-actions {
-      display: flex; gap: 16px; justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      color: #fff; padding: 16px 40px; border-radius: 100px;
-      font-weight: 700; font-size: 16px; border: none; cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 36px rgba(124,58,237,0.45);
-    }
-    .btn-outline {
-      background: transparent;
-      color: #c4b5fd; padding: 16px 40px; border-radius: 100px;
-      font-weight: 600; font-size: 16px; border: 1.5px solid rgba(139,92,246,0.4);
-      cursor: pointer; transition: all 0.2s;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-outline:hover {
-      border-color: #7c3aed; background: rgba(124,58,237,0.1);
-    }
-    .hero-stats {
-      display: flex; gap: 48px; justify-content: center; margin-top: 56px;
-      flex-wrap: wrap;
-    }
-    .hero-stat { text-align: center; }
-    .hero-stat-num {
-      font-size: 32px; font-weight: 800;
-      background: linear-gradient(135deg, #a78bfa, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-stat-label { font-size: 13px; color: #6b6b8d; margin-top: 2px; }
+    /* ===== FEATURES ===== */
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+    .feature-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:36px 28px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:transform .3s,border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
+    .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#7C3AED,#3B82F6);opacity:0;transition:opacity .3s}
+    .feature-card:hover{transform:translateY(-6px);border-color:rgba(124,58,237,0.2);box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+    .feature-card:hover::before{opacity:1}
+    .feature-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:24px;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(59,130,246,0.1));border:1px solid rgba(124,58,237,0.15)}
+    .feature-card h3{font-size:1.2rem;font-weight:700;margin-bottom:10px;color:#f0f0ff}
+    .feature-card p{font-size:14px;color:#8b8ba0;line-height:1.7}
+    .feature-card .learn-more{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13px;font-weight:600;color:#a78bfa;transition:gap .2s}
+    .feature-card:hover .learn-more{gap:10px}
 
-    /* --- Section Headers --- */
-    .section { padding: 100px 0; }
-    .section-label {
-      display: inline-block;
-      font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-      color: #7c3aed; margin-bottom: 12px;
-    }
-    .section-title {
-      font-size: clamp(30px, 4vw, 44px); font-weight: 800;
-      background: linear-gradient(135deg, #c4b5fd, #818cf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 16px;
-    }
-    .section-sub {
-      font-size: 18px; color: #8888aa; max-width: 600px; line-height: 1.7;
-    }
-    .text-center { text-align: center; }
-    .mx-auto { margin-left: auto; margin-right: auto; }
+    /* ===== BEFORE/AFTER SLIDER ===== */
+    .comparison-section{background:linear-gradient(180deg,rgba(124,58,237,0.04),transparent)}
+    .comparison-wrapper{max-width:720px;margin:0 auto;position:relative;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);box-shadow:0 20px 60px rgba(0,0,0,0.3);aspect-ratio:16/10;background:#111118;cursor:ew-resize;user-select:none;-webkit-user-select:none}
+    .comparison-wrapper img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+    .comparison-wrapper .after{clip-path:inset(0 50% 0 0);-webkit-clip-path:inset(0 50% 0 0)}
+    .comparison-wrapper .before-label,.comparison-wrapper .after-label{position:absolute;top:16px;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;z-index:5;pointer-events:none}
+    .comparison-wrapper .before-label{left:16px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);color:#f0f0ff}
+    .comparison-wrapper .after-label{right:16px;background:linear-gradient(135deg,#7C3AED,#3B82F6);color:#fff}
+    .comparison-handle{position:absolute;top:0;bottom:0;left:50%;width:4px;background:linear-gradient(180deg,#7C3AED,#3B82F6);transform:translateX(-50%);z-index:10;pointer-events:none;border-radius:2px}
+    .comparison-handle::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#3B82F6);border:3px solid rgba(255,255,255,0.2);box-shadow:0 0 20px rgba(124,58,237,0.4);display:flex;align-items:center;justify-content:center}
+    .comparison-handle::after{content:'⇔';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:16px;color:#fff;z-index:2;font-weight:700}
+    .comparison-caption{text-align:center;margin-top:20px;color:#8b8ba0;font-size:14px}
 
-    /* --- Features Grid --- */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 24px; margin-top: 56px;
+    /* ===== DEMO UPLOAD ZONE ===== */
+    .upload-zone{border:2px dashed rgba(124,58,237,0.3);border-radius:20px;padding:60px 40px;text-align:center;background:rgba(124,58,237,0.03);transition:border-color .3s,background .3s;cursor:pointer;max-width:640px;margin:0 auto;position:relative}
+    .upload-zone:hover,.upload-zone.dragover{border-color:#7C3AED;background:rgba(124,58,237,0.06)}
+    .upload-zone .upload-icon{font-size:56px;margin-bottom:16px;display:block;opacity:.7}
+    .upload-zone h3{font-size:1.3rem;font-weight:700;margin-bottom:8px}
+    .upload-zone p{color:#8b8ba0;font-size:14px}
+    .upload-zone .upload-btn{display:inline-block;margin-top:20px;padding:12px 32px;border-radius:100px;background:linear-gradient(135deg,#7C3AED,#3B82F6);color:#fff;font-weight:600;font-size:14px;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s}
+    .upload-zone .upload-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,0.3)}
+    .upload-zone .file-types{color:#5a5a70;font-size:12px;margin-top:12px}
+
+    /* ===== PRICING ===== */
+    .pricing-card{max-width:440px;margin:0 auto;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:48px 40px;text-align:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:relative;overflow:hidden}
+    .pricing-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7C3AED,#3B82F6,#7C3AED);background-size:200% 100%;animation:pricingGrad 3s ease infinite}
+    @keyframes pricingGrad{0%,100%{background-position:0 0}50%{background-position:100% 0}}
+    .pricing-badge{display:inline-block;padding:4px 14px;border-radius:100px;font-size:12px;font-weight:600;background:rgba(124,58,237,0.15);color:#a78bfa;margin-bottom:16px}
+    .pricing-card .price{font-size:3.5rem;font-weight:900;letter-spacing:-.03em;margin-bottom:4px}
+    .pricing-card .price .currency{font-size:1.5rem;vertical-align:super;color:#a78bfa}
+    .pricing-card .price-period{color:#6b6b80;font-size:14px;margin-bottom:28px}
+    .pricing-features{list-style:none;text-align:left;margin-bottom:32px}
+    .pricing-features li{display:flex;align-items:center;gap:12px;padding:10px 0;font-size:15px;color:#c4c4d8;border-bottom:1px solid rgba(255,255,255,0.04)}
+    .pricing-features li:last-child{border-bottom:none}
+    .pricing-features li .check{width:20px;height:20px;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(59,130,246,0.15));border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;color:#7C3AED}
+    .pricing-card .glow-btn{width:100%;padding:16px;font-size:16px;position:relative}
+    .pricing-guarantee{font-size:13px;color:#5a5a70;margin-top:16px}
+    .pricing-note{text-align:center;margin-top:20px;color:#6b6b80;font-size:14px}
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+    .testimonial-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:28px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:transform .3s,border-color .3s}
+    .testimonial-card:hover{transform:translateY(-4px);border-color:rgba(124,58,237,0.15)}
+    .testimonial-card .stars{color:#f59e0b;font-size:16px;margin-bottom:12px;letter-spacing:2px}
+    .testimonial-card blockquote{font-size:14px;color:#b0b0c8;line-height:1.7;margin-bottom:16px;font-style:italic}
+    .testimonial-card .author{display:flex;align-items:center;gap:12px}
+    .testimonial-card .author-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(59,130,246,0.2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#c4b5fd;flex-shrink:0}
+    .testimonial-card .author-info strong{display:block;font-size:14px;color:#f0f0ff}
+    .testimonial-card .author-info span{font-size:12px;color:#5a5a70}
+
+    /* ===== FAQ ===== */
+    .faq-list{max-width:680px;margin:0 auto}
+    .faq-item{border-bottom:1px solid rgba(255,255,255,0.06);padding:0}
+    .faq-question{width:100%;text-align:left;padding:20px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;background:none;border:none;color:#e4e4f0;font-size:1.05rem;font-weight:600;cursor:pointer;transition:color .2s;font-family:inherit}
+    .faq-question:hover{color:#c4b5fd}
+    .faq-question .faq-icon{width:28px;height:28px;border-radius:50%;background:rgba(124,58,237,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;color:#7C3AED;transition:transform .3s}
+    .faq-item.active .faq-question .faq-icon{transform:rotate(45deg)}
+    .faq-answer{padding:0 0 20px;display:none;font-size:14px;color:#8b8ba0;line-height:1.8}
+    .faq-item.active .faq-answer{display:block}
+
+    /* ===== FOOTER ===== */
+    footer{background:#07070a;border-top:1px solid rgba(255,255,255,0.04);padding:60px 0 30px;margin-top:0}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+    .footer-brand .logo{margin-bottom:12px}
+    .footer-brand p{font-size:13px;color:#5a5a70;line-height:1.7;max-width:300px}
+    .footer-col h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#8b8ba0;margin-bottom:16px}
+    .footer-col a{display:block;font-size:14px;color:#5a5a70;padding:4px 0;transition:color .2s}
+    .footer-col a:hover{color:#a78bfa}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,0.04);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .footer-bottom p{font-size:12px;color:#3a3a50}
+    .footer-socials{display:flex;gap:12px}
+    .footer-socials a{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:14px;color:#5a5a70;transition:all .2s}
+    .footer-socials a:hover{background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.2);color:#a78bfa}
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:900px){
+      .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+      .footer-grid .footer-brand{grid-column:1/-1}
     }
-    .feature-card {
-      background: rgba(255,255,255,0.04);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(139,92,246,0.15);
-      border-radius: 20px; padding: 36px 28px;
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      position: relative; overflow: hidden;
+    @media(max-width:768px){
+      nav{padding:12px 0}
+      .nav-links{display:none}
+      .hero-stats{gap:24px}
+      .hero-stat .num{font-size:1.4rem}
+      .pricing-card{padding:32px 24px}
+      .upload-zone{padding:40px 24px}
+      .comparison-wrapper{border-radius:12px}
+      .testimonials-grid{grid-template-columns:1fr}
+      .features-grid{grid-template-columns:1fr}
     }
-    .feature-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #7c3aed, #3b82f6);
-      opacity: 0; transition: opacity 0.4s;
-    }
-    .feature-card:hover::before { opacity: 1; }
-    .feature-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(139,92,246,0.4);
-      box-shadow: 0 24px 60px rgba(124,58,237,0.2);
-      background: rgba(255,255,255,0.07);
-    }
-    .feature-icon {
-      width: 52px; height: 52px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px; font-size: 24px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(59,130,246,0.2));
-      border: 1px solid rgba(139,92,246,0.2);
-    }
-    .feature-card h3 {
-      font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #f0f0ff;
-    }
-    .feature-card p {
-      font-size: 14px; color: #8888aa; line-height: 1.7;
+    @media(max-width:480px){
+      .section{padding:60px 0}
+      .hero{padding:100px 0 60px}
+      .hero-actions{flex-direction:column;align-items:center}
+      .hero-stats{flex-direction:column;gap:16px}
+      .footer-grid{grid-template-columns:1fr}
+      .footer-bottom{flex-direction:column;text-align:center}
     }
 
-    /* --- Comparison Slider --- */
-    .comparison-wrapper {
-      margin: 56px auto 0; max-width: 720px;
-      position: relative; border-radius: 20px; overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    /* ===== MOBILE HAMBURGER ===== */
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+    .hamburger span{width:24px;height:2px;background:#c4b5fd;border-radius:2px;transition:all .3s;display:block}
+    @media(max-width:768px){
+      .hamburger{display:flex}
     }
-    .comparison-slider {
-      position: relative; width: 100%; padding-bottom: 66%;
-      cursor: ew-resize; user-select: none;
-    }
-    .comparison-slider img {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      object-fit: cover; display: block;
-    }
-    .comparison-before { position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; }
-    .comparison-before img { width: 200%; max-width: 200%; height: 100%; object-fit: cover; object-position: left; }
-    .comparison-handle {
-      position: absolute; top: 0; left: 50%; width: 4px; height: 100%;
-      background: #fff; transform: translateX(-50%);
-      z-index: 10; display: flex; align-items: center; justify-content: center;
-    }
-    .comparison-handle-circle {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-      border: 3px solid #fff;
-    }
-    .comparison-label {
-      position: absolute; bottom: 16px; font-size: 12px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 1px;
-      background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 6px;
-      z-index: 5;
-    }
-    .label-before { left: 16px; color: #f87171; }
-    .label-after { right: 16px; color: #34d399; }
-
-    /* --- Upload Zone --- */
-    .upload-zone {
-      margin: 56px auto 0; max-width: 640px;
-      border: 2px dashed rgba(139,92,246,0.3);
-      border-radius: 24px; padding: 60px 40px;
-      text-align: center; transition: all 0.3s;
-      background: rgba(255,255,255,0.03);
-      position: relative;
-    }
-    .upload-zone.drag-over {
-      border-color: #7c3aed;
-      background: rgba(124,58,237,0.08);
-      box-shadow: inset 0 0 40px rgba(124,58,237,0.1);
-    }
-    .upload-icon {
-      width: 72px; height: 72px; margin: 0 auto 20px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(59,130,246,0.15));
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 32px;
-    }
-    .upload-zone h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: #f0f0ff; }
-    .upload-zone p { font-size: 14px; color: #8888aa; margin-bottom: 6px; }
-    .upload-zone .btn-primary { margin-top: 20px; }
-    .upload-zone input[type="file"] { display: none; }
-    .upload-preview {
-      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 24px;
-    }
-    .upload-preview-item {
-      width: 80px; height: 80px; border-radius: 12px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(139,92,246,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px; position: relative;
-    }
-    .upload-preview-item .remove {
-      position: absolute; top: -6px; right: -6px;
-      width: 20px; height: 20px; border-radius: 50%;
-      background: #ef4444; color: #fff; font-size: 12px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; border: 2px solid #0a0a1a;
-    }
-
-    /* --- Pricing --- */
-    .pricing-card {
-      margin: 56px auto 0; max-width: 420px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(59,130,246,0.08));
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(139,92,246,0.25);
-      border-radius: 28px; padding: 48px 36px;
-      position: relative; overflow: hidden;
-      transition: all 0.4s;
-    }
-    .pricing-card:hover {
-      border-color: rgba(139,92,246,0.5);
-      box-shadow: 0 24px 80px rgba(124,58,237,0.15);
-      transform: translateY(-4px);
-    }
-    .pricing-card .popular {
-      position: absolute; top: 20px; right: 20px;
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      color: #fff; font-size: 11px; font-weight: 700;
-      padding: 4px 14px; border-radius: 100px;
-      text-transform: uppercase; letter-spacing: 1px;
-    }
-    .pricing-header { text-align: center; margin-bottom: 32px; }
-    .pricing-header h3 { font-size: 24px; font-weight: 700; color: #f0f0ff; margin-bottom: 8px; }
-    .pricing-header .price {
-      font-size: 48px; font-weight: 900;
-      background: linear-gradient(135deg, #a78bfa, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .pricing-header .price span { font-size: 18px; font-weight: 500; color: #8888aa; -webkit-text-fill-color: #8888aa; }
-    .pricing-header .subprice { font-size: 14px; color: #8888aa; margin-top: 4px; }
-    .pricing-features { list-style: none; margin-bottom: 32px; }
-    .pricing-features li {
-      padding: 10px 0; border-bottom: 1px solid rgba(139,92,246,0.1);
-      display: flex; align-items: center; gap: 10px;
-      font-size: 14px; color: #c4c4dd;
-    }
-    .pricing-features li:last-child { border-bottom: none; }
-    .pricing-features li::before {
-      content: '✓'; display: inline-flex; align-items: center; justify-content: center;
-      width: 20px; height: 20px; border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0;
-    }
-    .btn-stripe {
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      color: #fff; padding: 16px 32px; border-radius: 100px;
-      font-weight: 700; font-size: 16px; border: none; cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; text-align: center;
-    }
-    .btn-stripe:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 36px rgba(124,58,237,0.45);
-    }
-    .pricing-note { text-align: center; font-size: 12px; color: #6b6b8d; margin-top: 14px; }
-
-    /* --- Testimonials --- */
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px; margin-top: 56px;
-    }
-    .testimonial-card {
-      background: rgba(255,255,255,0.04);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(139,92,246,0.12);
-      border-radius: 20px; padding: 32px;
-    }
-    .testimonial-stars { color: #fbbf24; font-size: 16px; margin-bottom: 14px; letter-spacing: 2px; }
-    .testimonial-card blockquote {
-      font-size: 15px; color: #c0c0dd; line-height: 1.7;
-      margin-bottom: 20px; font-style: italic;
-    }
-    .testimonial-author {
-      display: flex; align-items: center; gap: 12px;
-    }
-    .testimonial-avatar {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 16px; color: #fff;
-      flex-shrink: 0;
-    }
-    .testimonial-name { font-weight: 700; font-size: 14px; color: #e4e4f0; }
-    .testimonial-role { font-size: 12px; color: #8888aa; }
-
-    /* --- Trust Badges --- */
-    .trust-section { padding: 60px 0; }
-    .trust-grid {
-      display: flex; flex-wrap: wrap; gap: 40px; justify-content: center;
-      align-items: center; margin-top: 36px;
-    }
-    .trust-badge {
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-      color: #6b6b8d; font-size: 13px; font-weight: 500;
-    }
-    .trust-icon {
-      width: 52px; height: 52px; border-radius: 14px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(139,92,246,0.12);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; transition: all 0.3s;
-    }
-    .trust-badge:hover .trust-icon {
-      border-color: rgba(139,92,246,0.4);
-      background: rgba(124,58,237,0.1);
-      transform: translateY(-2px);
-    }
-
-    /* --- FAQ --- */
-    .faq-list { max-width: 720px; margin: 48px auto 0; }
-    .faq-item {
-      border-bottom: 1px solid rgba(139,92,246,0.1);
-      padding: 8px 0;
-    }
-    .faq-question {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 18px 0; cursor: pointer; font-weight: 600; font-size: 16px;
-      color: #e4e4f0; transition: color 0.2s; user-select: none;
-    }
-    .faq-question:hover { color: #a78bfa; }
-    .faq-question .arrow {
-      transition: transform 0.3s; font-size: 14px; color: #7c3aed;
-    }
-    .faq-item.active .faq-question .arrow { transform: rotate(180deg); }
-    .faq-answer {
-      max-height: 0; overflow: hidden;
-      transition: max-height 0.35s ease, padding 0.35s ease;
-      padding: 0 0; font-size: 14px; color: #8888aa; line-height: 1.7;
-    }
-    .faq-item.active .faq-answer {
-      max-height: 300px; padding: 0 0 18px;
-    }
-
-    /* --- Footer --- */
-    footer {
-      border-top: 1px solid rgba(139,92,246,0.1);
-      padding: 60px 0 32px; margin-top: 40px;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px; margin-bottom: 40px;
-    }
-    @media (max-width: 768px) {
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 480px) {
-      .footer-grid { grid-template-columns: 1fr; }
-    }
-    .footer-brand .logo { margin-bottom: 12px; }
-    .footer-brand p { font-size: 14px; color: #8888aa; max-width: 300px; }
-    .footer-col h4 { font-size: 14px; font-weight: 700; color: #f0f0ff; margin-bottom: 16px; }
-    .footer-col ul { list-style: none; }
-    .footer-col ul li { margin-bottom: 10px; }
-    .footer-col ul li a { font-size: 14px; color: #8888aa; transition: color 0.2s; }
-    .footer-col ul li a:hover { color: #a78bfa; }
-    .footer-bottom {
-      border-top: 1px solid rgba(139,92,246,0.08);
-      padding-top: 24px; display: flex; justify-content: space-between;
-      align-items: center; flex-wrap: wrap; gap: 12px;
-    }
-    .footer-bottom p { font-size: 13px; color: #6b6b8d; }
-    .footer-socials { display: flex; gap: 12px; }
-    .footer-socials a {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(139,92,246,0.12);
-      display: flex; align-items: center; justify-content: center;
-      color: #8888aa; font-size: 16px; transition: all 0.2s;
-    }
-    .footer-socials a:hover {
-      border-color: #7c3aed; color: #a78bfa; background: rgba(124,58,237,0.1);
-    }
-
-    /* --- Scrollbar --- */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0a0a1a; }
-    ::-webkit-scrollbar-thumb { background: #2d2d55; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3b3b6b; }
-
-    /* --- Responsive --- */
-    @media (max-width: 600px) {
-      nav .container { padding: 0 16px; }
-      .nav-cta { padding: 8px 18px; font-size: 13px; }
-      .hero { padding: 100px 0 60px; }
-      .hero-stats { gap: 24px; }
-      .section { padding: 60px 0; }
-      .comparison-wrapper { border-radius: 12px; }
-      .pricing-card { padding: 32px 24px; }
-    }
-
-    /* --- Animations --- */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-in { animation: fadeInUp 0.6s ease forwards; }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-    .delay-4 { animation-delay: 0.4s; }
+    .mobile-menu{display:none;position:fixed;top:62px;left:0;right:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:20px 24px;border-bottom:1px solid rgba(124,58,237,0.12);z-index:999;flex-direction:column;gap:16px}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{font-size:16px;font-weight:500;color:#a5a5b8;padding:8px 0;transition:color .2s}
+    .mobile-menu a:hover{color:#c4b5fd}
   </style>
 </head>
 <body>
 
-  <!-- ============ NAV ============ -->
-  <nav>
-    <div class="container">
-      <a href="#" class="logo">
-        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="24" height="24" rx="6" stroke="url(#lg)" stroke-width="2.5" fill="none"/>
-          <circle cx="14" cy="14" r="5" fill="url(#lg)"/>
-          <path d="M14 5 L14 9 M14 19 L14 23 M5 14 L9 14 M19 14 L23 14" stroke="url(#lg)" stroke-width="2" stroke-linecap="round"/>
-          <defs><linearGradient id="lg" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#60a5fa"/></linearGradient></defs>
-        </svg>
-        AI Image Pro
-      </a>
-      <a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" target="_blank" class="nav-cta">Get Started</a>
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="container">
+    <a href="#" class="logo">
+      <svg viewBox="0 0 28 28" fill="none"><rect x="4" y="4" width="20" height="20" rx="6" stroke="url(#lg)" stroke-width="2.5" fill="none"/><path d="M10 18l4-6 3 4 2-3 3 5H10z" fill="url(#lg)"/><defs><linearGradient id="lg" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+      AI Image Pro
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#testimonials">Reviews</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" class="nav-cta">Buy Now — $12.99</a>
     </div>
-  </nav>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
 
-  <!-- ============ HERO ============ -->
-  <section class="hero" id="home">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-grid"></div>
-    <div class="container">
-      <div class="hero-badge">🚀 Now in Beta</div>
-      <h1>Transform Your Images<br>with AI Precision</h1>
-      <p>Remove backgrounds, upscale resolution, enhance quality, and batch-process thousands of images — all powered by cutting-edge AI.</p>
-      <div class="hero-actions">
-        <a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" target="_blank" class="btn-primary">
-          Get Unlimited Access
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features">Features</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#testimonials">Reviews</a>
+  <a href="#faq">FAQ</a>
+  <a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" style="background:linear-gradient(135deg,#7C3AED,#3B82F6);color:#fff;padding:12px 24px;border-radius:100px;text-align:center;font-weight:600">Buy Now — $12.99</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orbs">
+    <div class="hero-orb"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-orb"></div>
+  </div>
+  <div class="hero-grid"></div>
+  <div class="hero-content" style="position:relative;z-index:2">
+    <div class="hero-badge">✨ Powered by Advanced AI</div>
+    <h1>Transform Your Images<br>with <span class="gradient-text">AI Precision</span></h1>
+    <p>Remove backgrounds, upscale to 4K, enhance details, and batch-process hundreds of images — all in one click. No skills required.</p>
+    <div class="hero-actions">
+      <a href="#demo" class="glow-btn">Try It Free</a>
+      <a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" class="glow-btn-outline">Get Unlimited — $12.99</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">50K+</div><div class="label">Images Processed</div></div>
+      <div class="hero-stat"><div class="num">4.9★</div><div class="label">User Rating</div></div>
+      <div class="hero-stat"><div class="num">Lifetime</div><div class="label">One-Time Access</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-title">
+      <h2>Four Powerful Tools, One Platform</h2>
+      <p>Everything you need to transform your images with state-of-the-art AI models.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Remove Background</h3>
+        <p>Precision AI segmentation that handles hair, fur, and complex edges flawlessly. Transparent or custom background in seconds.</p>
+        <span class="learn-more">Learn more →</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Upscale Image</h3>
+        <p>Increase resolution up to 4x with real-ESRGAN technology. Recover lost details and produce crisp, print-ready results.</p>
+        <span class="learn-more">Learn more →</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <h3>Enhance Photo</h3>
+        <p>Auto color correction, face restoration, noise reduction, and sharpening. Bring old or low-light photos back to life.</p>
+        <span class="learn-more">Learn more →</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>Batch Process</h3>
+        <p>Process hundreds of images simultaneously with the same settings. Save hours of manual work with one-click batch operations.</p>
+        <span class="learn-more">Learn more →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BEFORE/AFTER COMPARISON ===== -->
+<section class="section comparison-section" id="comparison">
+  <div class="container">
+    <div class="section-title">
+      <h2>See the Difference</h2>
+      <p>Drag the slider to compare original and AI-enhanced results.</p>
+    </div>
+    <div class="comparison-wrapper" id="comparisonSlider">
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&h=500&fit=crop" alt="Original photo" class="before" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none">
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&h=500&fit=crop&sat=150&bright=110" alt="Enhanced photo" class="after" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;clip-path:inset(0 50% 0 0);-webkit-clip-path:inset(0 50% 0 0)">
+      <span class="before-label">Original</span>
+      <span class="after-label">AI Enhanced</span>
+      <div class="comparison-handle"></div>
+    </div>
+    <p class="comparison-caption">← Drag the handle to compare original vs AI-enhanced image</p>
+  </div>
+</section>
+
+<!-- ===== DEMO UPLOAD ZONE ===== -->
+<section class="section" id="demo" style="background:linear-gradient(180deg,transparent,rgba(124,58,237,0.03))">
+  <div class="container">
+    <div class="section-title">
+      <h2>Try It Yourself</h2>
+      <p>Upload an image and see the AI magic happen. No account needed.</p>
+    </div>
+    <div class="upload-zone" id="uploadZone">
+      <span class="upload-icon">🖼️</span>
+      <h3>Drop your image here</h3>
+      <p>or click to browse files</p>
+      <span class="upload-btn">Choose Image</span>
+      <div class="file-types">Supports JPG, PNG, WebP • Max 20MB</div>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+      <div id="uploadPreview" style="margin-top:20px;display:none;border-radius:12px;overflow:hidden;max-width:400px;margin-left:auto;margin-right:auto"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="section-title">
+      <h2>Simple, One-Time Pricing</h2>
+      <p>No subscriptions. No hidden fees. Pay once and keep forever.</p>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-badge">🌟 Best Value</div>
+      <div class="price"><span class="currency">$</span>12.99</div>
+      <div class="price-period">One-time payment • Lifetime access</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> Remove background from any image</li>
+        <li><span class="check">✓</span> Upscale images up to 4K resolution</li>
+        <li><span class="check">✓</span> Enhance photo quality &amp; restore faces</li>
+        <li><span class="check">✓</span> Batch process unlimited images</li>
+        <li><span class="check">✓</span> No watermark on results</li>
+        <li><span class="check">✓</span> Free updates forever</li>
+      </ul>
+      <a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" class="glow-btn" style="width:100%;padding:16px;font-size:16px">Get Lifetime Access — $12.99</a>
+      <div class="pricing-guarantee">🔒 Secure checkout via Stripe • 14-day money-back guarantee</div>
+    </div>
+    <p class="pricing-note">🎉 Start with 2 free processes — no card required</p>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section" id="testimonials" style="background:linear-gradient(180deg,rgba(124,58,237,0.03),transparent)">
+  <div class="container">
+    <div class="section-title">
+      <h2>Loved by Creators Worldwide</h2>
+      <p>Join 50,000+ happy users who transformed their workflow.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"This tool saved me hours of tedious Photoshop work. The background removal is flawless — handles even my curly hair perfectly."</blockquote>
+        <div class="author">
+          <div class="author-avatar">SM</div>
+          <div class="author-info"><strong>Sarah Mitchell</strong><span>Photographer</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"The batch processing feature is a game-changer. I processed 200 product images in under 3 minutes. Best $12.99 I ever spent."</blockquote>
+        <div class="author">
+          <div class="author-avatar">JC</div>
+          <div class="author-info"><strong>James Chen</strong><span>E-commerce Store Owner</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"I use the upscale tool daily for my print-on-demand business. The 4K results are incredible — my customers always compliment the quality."</blockquote>
+        <div class="author">
+          <div class="author-avatar">AL</div>
+          <div class="author-info"><strong>Aisha Lewis</strong><span>Print-on-Demand Designer</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-title">
+      <h2>Frequently Asked Questions</h2>
+      <p>Everything you need to know before you buy.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question">How does the free trial work?<span class="faq-icon">+</span></button>
+        <div class="faq-answer">You get 2 free image processes immediately — no credit card required. Upload any image to test background removal, upscaling, or enhancement before purchasing.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Is it really a one-time payment?<span class="faq-icon">+</span></button>
+        <div class="faq-answer">Yes! Pay $12.99 once and you have lifetime access. No subscriptions, monthly fees, or recurring charges. You keep access forever, including all future updates.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">What image formats are supported?<span class="faq-icon">+</span></button>
+        <div class="faq-answer">We support JPG, PNG, WebP, BMP, and TIFF formats. Maximum file size is 20MB per image for standard processing and 10MB for batch processing.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">How long does processing take?<span class="faq-icon">+</span></button>
+        <div class="faq-answer">Most images process in 3–10 seconds. Batch processing handles up to 100 images at once, typically completing within 2–5 minutes depending on image size.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">What if I'm not satisfied?<span class="faq-icon">+</span></button>
+        <div class="faq-answer">We offer a 14-day money-back guarantee — no questions asked. If AI Image Pro doesn't meet your expectations, we'll refund your purchase in full.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">Is there a watermark on my images?<span class="faq-icon">+</span></button>
+        <div class="faq-answer">No watermark ever. All processed images are completely clean and ready for commercial or personal use. You retain full rights to your output.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <svg viewBox="0 0 28 28" fill="none" style="width:28px;height:28px"><rect x="4" y="4" width="20" height="20" rx="6" stroke="url(#lg2)" stroke-width="2.5" fill="none"/><path d="M10 18l4-6 3 4 2-3 3 5H10z" fill="url(#lg2)"/></svg>
+          AI Image Pro
         </a>
-        <a href="#features" class="btn-outline">
-          Explore Features
-        </a>
+        <p>Transform your images with cutting-edge AI. Remove backgrounds, upscale, enhance, and batch process — all from one powerful tool.</p>
       </div>
-      <div class="hero-stats">
-        <div class="hero-stat"><div class="hero-stat-num">50K+</div><div class="hero-stat-label">Images Processed</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">99.2%</div><div class="hero-stat-label">Accuracy Rate</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">12K+</div><div class="hero-stat-label">Happy Users</div></div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#demo">Try Demo</a>
+        <a href="#faq">FAQ</a>
       </div>
-    </div>
-  </section>
-
-  <!-- ============ FEATURES ============ -->
-  <section class="section" id="features">
-    <div class="container">
-      <div class="text-center">
-        <div class="section-label">Features</div>
-        <h2 class="section-title">Powerful AI Tools at Your Fingertips</h2>
-        <p class="section-sub mx-auto">Four industry-leading capabilities in one seamless platform. No subscription needed — pay once, use forever.</p>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
       </div>
-      <div class="features-grid">
-        <div class="feature-card animate-in">
-          <div class="feature-icon">✂️</div>
-          <h3>Remove Background</h3>
-          <p>AI-powered background removal with hair-level precision. Works on people, products, pets, and complex subjects in seconds.</p>
-        </div>
-        <div class="feature-card animate-in delay-1">
-          <div class="feature-icon">🔍</div>
-          <h3>AI Upscale</h3>
-          <p>Upscale images up to 4x resolution while preserving every detail. Perfect for printing, e-commerce, and creative projects.</p>
-        </div>
-        <div class="feature-card animate-in delay-2">
-          <div class="feature-icon">✨</div>
-          <h3>Image Enhance</h3>
-          <p>Auto-enhance colour, lighting, and sharpness. One-click improvement that makes your images pop like never before.</p>
-        </div>
-        <div class="feature-card animate-in delay-3">
-          <div class="feature-icon">📦</div>
-          <h3>Batch Process</h3>
-          <p>Process hundreds of images at once with the same AI quality. Set it and forget it — our fastest-growing feature.</p>
-        </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#">Help Center</a>
+        <a href="#">API Docs</a>
+        <a href="#">Status</a>
+        <a href="mailto:support@aiimagepro.com">Email Us</a>
       </div>
     </div>
-  </section>
-
-  <!-- ============ COMPARISON ============ -->
-  <section class="section" id="comparison" style="padding-top:0;">
-    <div class="container">
-      <div class="text-center">
-        <div class="section-label">Side by Side</div>
-        <h2 class="section-title">See the Difference</h2>
-        <p class="section-sub mx-auto">Drag the slider to compare original vs AI-enhanced results.</p>
-      </div>
-      <div class="comparison-wrapper">
-        <div class="comparison-slider" id="comparisonSlider">
-          <div class="comparison-label label-before">Original</div>
-          <div class="comparison-label label-after">Enhanced</div>
-          <!-- After (full image) -->
-          <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=720&h=480&fit=crop&sat=-100" alt="Enhanced" style="filter:brightness(1.1) contrast(1.15) saturate(1.3);">
-          <!-- Before (left half clipped) -->
-          <div class="comparison-before" id="beforeLayer">
-            <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=720&h=480&fit=crop&sat=-100" alt="Original" style="filter:brightness(0.65) contrast(0.8) saturate(0.2) blur(1px);">
-          </div>
-          <div class="comparison-handle" id="comparisonHandle">
-            <div class="comparison-handle-circle">⟷</div>
-          </div>
-        </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 AI Image Pro. All rights reserved. Made with ❤️</p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Twitter">𝕏</a>
+        <a href="#" aria-label="GitHub">⌂</a>
+        <a href="#" aria-label="YouTube">▶</a>
       </div>
     </div>
-  </section>
+  </div>
+</footer>
 
-  <!-- ============ UPLOAD ZONE ============ -->
-  <section class="section" id="upload">
-    <div class="container">
-      <div class="text-center">
-        <div class="section-label">Try It Now</div>
-        <h2 class="section-title">Upload Your Image</h2>
-        <p class="section-sub mx-auto">Drag & drop your files below to preview the magic. No uploads required — we'll show you the possibilities.</p>
-      </div>
-      <div class="upload-zone" id="uploadZone">
-        <div class="upload-icon">🖼️</div>
-        <h3>Drop images here</h3>
-        <p>or click to browse from your computer</p>
-        <p style="font-size:12px;color:#6b6b8d;">Supports: JPG, PNG, WEBP — Max 10MB each</p>
-        <button class="btn-primary" id="uploadBtn">Choose Files</button>
-        <input type="file" id="fileInput" accept="image/*" multiple>
-        <div class="upload-preview" id="uploadPreview"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ PRICING ============ -->
-  <section class="section" id="pricing">
-    <div class="container">
-      <div class="text-center">
-        <div class="section-label">Pricing</div>
-        <h2 class="section-title">One Payment. Lifetime Access.</h2>
-        <p class="section-sub mx-auto">No monthly subscriptions. No hidden fees. Just a single purchase for unlimited image processing, forever.</p>
-      </div>
-      <div class="pricing-card">
-        <div class="popular">Best Value</div>
-        <div class="pricing-header">
-          <h3>AI Image Pro — Full Access</h3>
-          <div class="price">$12.99 <span>AUD</span></div>
-          <div class="subprice">One-time payment · Lifetime licence</div>
-        </div>
-        <ul class="pricing-features">
-          <li>Unlimited background removals</li>
-          <li>AI upscale up to 4x resolution</li>
-          <li>Auto image enhancement</li>
-          <li>Batch processing (unlimited files)</li>
-          <li>High-resolution exports</li>
-          <li>Priority processing speed</li>
-          <li>24/7 email & chat support</li>
-          <li>Lifetime updates & new features</li>
-          <li>Commercial use licence</li>
-        </ul>
-        <a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" target="_blank" class="btn-stripe">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 1.481 0 2.876.47 4.066 1.363l1.003-1.448c-1.256-.975-2.862-1.572-4.737-1.572-2.808 0-4.52 1.572-4.52 3.726 0 2.36 1.773 3.278 4.306 4.214 2.156.8 3.23 1.412 3.23 2.457 0 .991-.869 1.524-2.29 1.524-1.66 0-3.27-.682-4.582-1.95L7.27 16.82c1.352 1.257 3.193 2.03 5.362 2.03 3.006 0 4.96-1.537 4.96-3.872 0-2.427-1.795-3.378-4.616-4.328z"/></svg>
-          Buy Now — $12.99 AUD
-        </a>
-        <p class="pricing-note">🔒 Secure checkout via Stripe · 14-day money-back guarantee</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ TESTIMONIALS ============ -->
-  <section class="section" id="testimonials">
-    <div class="container">
-      <div class="text-center">
-        <div class="section-label">Testimonials</div>
-        <h2 class="section-title">Loved by Australians</h2>
-        <p class="section-sub mx-auto">Hear from creative professionals and business owners across Australia.</p>
-      </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card animate-in">
-          <div class="testimonial-stars">★★★★★</div>
-          <blockquote>"This tool has completely replaced our $50/month subscription. The background removal is flawless, and batch processing saved us an entire weekend of work."</blockquote>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">JS</div>
-            <div>
-              <div class="testimonial-name">James Sullivan</div>
-              <div class="testimonial-role">E-commerce Owner, Sydney NSW</div>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card animate-in delay-1">
-          <div class="testimonial-stars">★★★★★</div>
-          <blockquote>"I was blown away by the upscale quality — old family photos look like they were taken yesterday. Best $12.99 I've ever spent on software."</blockquote>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">MC</div>
-            <div>
-              <div class="testimonial-name">Mia Chen</div>
-              <div class="testimonial-role">Photographer, Melbourne VIC</div>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card animate-in delay-2">
-          <div class="testimonial-stars">★★★★★</div>
-          <blockquote>"We process 200+ product images a week for our online store. AI Image Pro handles them in minutes. The one-time price is an absolute steal."</blockquote>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">TW</div>
-            <div>
-              <div class="testimonial-name">Tahlia Walker</div>
-              <div class="testimonial-role">Creative Director, Brisbane QLD</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ TRUST BADGES ============ -->
-  <section class="section trust-section" id="trust">
-    <div class="container">
-      <div class="text-center">
-        <div class="section-label">Trusted & Secure</div>
-        <h2 class="section-title">You're in Safe Hands</h2>
-        <p class="section-sub mx-auto">We take security, privacy, and reliability seriously.</p>
-      </div>
-      <div class="trust-grid">
-        <div class="trust-badge">
-          <div class="trust-icon">🔒</div>
-          <span>256-bit SSL Encryption</span>
-        </div>
-        <div class="trust-badge">
-          <div class="trust-icon">💳</div>
-          <span>Stripe Secure Payments</span>
-        </div>
-        <div class="trust-badge">
-          <div class="trust-icon">🛡️</div>
-          <span>14-Day Money-Back</span>
-        </div>
-        <div class="trust-badge">
-          <div class="trust-icon">🔐</div>
-          <span>Images Never Stored</span>
-        </div>
-        <div class="trust-badge">
-          <div class="trust-icon">🌏</div>
-          <span>Australian Owned</span>
-        </div>
-        <div class="trust-badge">
-          <div class="trust-icon">⚡</div>
-          <span>Processed in Seconds</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ FAQ ============ -->
-  <section class="section" id="faq">
-    <div class="container">
-      <div class="text-center">
-        <div class="section-label">FAQ</div>
-        <h2 class="section-title">Frequently Asked Questions</h2>
-        <p class="section-sub mx-auto">Everything you need to know before buying.</p>
-      </div>
-      <div class="faq-list">
-        <div class="faq-item active">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            How does the one-time payment work?
-            <span class="arrow">▼</span>
-          </div>
-          <div class="faq-answer">You pay $12.99 AUD once via Stripe and get lifetime access to all AI Image Pro features. No subscriptions, no recurring fees. We issue a receipt and you can start processing images immediately.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            What image formats are supported?
-            <span class="arrow">▼</span>
-          </div>
-          <div class="faq-answer">We support JPG, JPEG, PNG, WEBP, and BMP files. For batch processing, you can upload mixed formats and each will be handled correctly. Maximum file size is 25MB per image.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            Can I use the images commercially?
-            <span class="arrow">▼</span>
-          </div>
-          <div class="faq-answer">Absolutely. Your licence includes full commercial use. Use enhanced images for products, marketing, social media, print materials, or any commercial project with no attribution required.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            Is there a free trial or limit?
-            <span class="arrow">▼</span>
-          </div>
-          <div class="faq-answer">Yes! You get 2 free image processes without any payment. After purchasing the full licence for $12.99 AUD, you unlock unlimited processing with no caps, no daily limits, and no watermarks.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            How do I get support if I have issues?
-            <span class="arrow">▼</span>
-          </div>
-          <div class="faq-answer">We offer 24/7 email and chat support to all paid users. Most enquiries are answered within 2 hours. We also have a growing knowledge base with tutorials and troubleshooting guides.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            What happens if I'm not satisfied?
-            <span class="arrow">▼</span>
-          </div>
-          <div class="faq-answer">We offer a 14-day money-back guarantee, no questions asked. If you're not happy with AI Image Pro for any reason, contact us and we'll process a full refund within 48 hours.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ CTA BANNER ============ -->
-  <section class="section" style="padding-top:0;">
-    <div class="container">
-      <div class="pricing-card" style="max-width:600px; text-align:center;">
-        <div class="pricing-header">
-          <h3>Ready to transform your images?</h3>
-          <p style="color:#8888aa; font-size:16px; margin-top:8px;">Join 12,000+ happy users. One payment. Lifetime access.</p>
-        </div>
-        <a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" target="_blank" class="btn-stripe" style="max-width:400px; margin:0 auto;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 1.481 0 2.876.47 4.066 1.363l1.003-1.448c-1.256-.975-2.862-1.572-4.737-1.572-2.808 0-4.52 1.572-4.52 3.726 0 2.36 1.773 3.278 4.306 4.214 2.156.8 3.23 1.412 3.23 2.457 0 .991-.869 1.524-2.29 1.524-1.66 0-3.27-.682-4.582-1.95L7.27 16.82c1.352 1.257 3.193 2.03 5.362 2.03 3.006 0 4.96-1.537 4.96-3.872 0-2.427-1.795-3.378-4.616-4.328z"/></svg>
-          Buy Now — $12.99 AUD
-        </a>
-        <p class="pricing-note">🔒 Secure checkout via Stripe · 14-day money-back guarantee</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ FOOTER ============ -->
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="#" class="logo">
-            <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px;">
-              <rect x="2" y="2" width="24" height="24" rx="6" stroke="url(#lg2)" stroke-width="2.5" fill="none"/>
-              <circle cx="14" cy="14" r="5" fill="url(#lg2)"/>
-              <path d="M14 5 L14 9 M14 19 L14 23 M5 14 L9 14 M19 14 L23 14" stroke="url(#lg2)" stroke-width="2" stroke-linecap="round"/>
-              <defs><linearGradient id="lg2" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#60a5fa"/></linearGradient></defs>
-            </svg>
-            AI Image Pro
-          </a>
-          <p>Australian-built AI image tools. Remove backgrounds, upscale, enhance, and batch process your images with cutting-edge artificial intelligence.</p>
-        </div>
-        <div class="footer-col">
-          <h4>Product</h4>
-          <ul>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#upload">Try It</a></li>
-            <li><a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" target="_blank">Buy Now</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Support</h4>
-          <ul>
-            <li><a href="#faq">FAQ</a></li>
-            <li><a href="mailto:support@aiimagepro.com">Contact Us</a></li>
-            <li><a href="#">Status</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© 2026 AI Image Pro. All rights reserved. Australian owned & operated.</p>
-        <div class="footer-socials">
-          <a href="#" aria-label="Twitter">𝕏</a>
-          <a href="#" aria-label="Instagram">◷</a>
-          <a href="#" aria-label="YouTube">▶</a>
-          <a href="#" aria-label="LinkedIn">in</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ============ JAVASCRIPT ============ -->
-  <script>
-    // --- Comparison Slider ---
-    (function() {
-      const slider = document.getElementById('comparisonSlider');
-      const beforeLayer = document.getElementById('beforeLayer');
-      const handle = document.getElementById('comparisonHandle');
-      let isDragging = false;
-
-      function updateSlider(x) {
-        const rect = slider.getBoundingClientRect();
-        let pos = (x - rect.left) / rect.width;
-        pos = Math.max(0.05, Math.min(0.95, pos));
-        beforeLayer.style.width = (pos * 100) + '%';
-        handle.style.left = (pos * 100) + '%';
+<script>
+(function(){
+  // --- Mobile Menu ---
+  var hamburger = document.getElementById('hamburger');
+  var mobileMenu = document.getElementById('mobileMenu');
+  if(hamburger && mobileMenu){
+    hamburger.addEventListener('click',function(e){
+      e.stopPropagation();
+      mobileMenu.classList.toggle('open');
+    });
+    mobileMenu.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){ mobileMenu.classList.remove('open'); });
+    });
+    document.addEventListener('click',function(e){
+      if(!mobileMenu.contains(e.target) && !hamburger.contains(e.target)){
+        mobileMenu.classList.remove('open');
       }
+    });
+  }
 
-      function onDown(e) {
-        isDragging = true;
-        updateSlider(e.clientX || e.touches[0].clientX);
-      }
-      function onMove(e) {
-        if (!isDragging) return;
-        e.preventDefault();
-        updateSlider(e.clientX || e.touches[0].clientX);
-      }
-      function onUp() { isDragging = false; }
-
-      slider.addEventListener('mousedown', onDown);
-      slider.addEventListener('touchstart', onDown, { passive: true });
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-      document.addEventListener('touchmove', onMove, { passive: false });
-      document.addEventListener('touchend', onUp);
-
-      // Set initial position
-      updateSlider(slider.getBoundingClientRect().left + slider.getBoundingClientRect().width * 0.5);
-    })();
-
-    // --- Upload Zone (UI only) ---
-    (function() {
-      const zone = document.getElementById('uploadZone');
-      const fileInput = document.getElementById('fileInput');
-      const uploadBtn = document.getElementById('uploadBtn');
-      const preview = document.getElementById('uploadPreview');
-
-      // Simulated demo files
-      const demoFiles = ['design.jpg', 'photo.png', 'product.webp'];
-
-      function addDemoPreviews() {
-        preview.innerHTML = '';
-        demoFiles.forEach((name, i) => {
-          const div = document.createElement('div');
-          div.className = 'upload-preview-item';
-          div.innerHTML = '🖼️';
-          const remove = document.createElement('div');
-          remove.className = 'remove';
-          remove.textContent = '×';
-          remove.onclick = function(e) { e.stopPropagation(); div.remove(); };
-          div.appendChild(remove);
-          preview.appendChild(div);
-        });
-      }
-
-      // Show demo files initially
-      addDemoPreviews();
-
-      zone.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        zone.classList.add('drag-over');
-      });
-      zone.addEventListener('dragleave', function() {
-        zone.classList.remove('drag-over');
-      });
-      zone.addEventListener('drop', function(e) {
-        e.preventDefault();
-        zone.classList.remove('drag-over');
-        // UI only — show preview feedback
-        const items = (e.dataTransfer && e.dataTransfer.files) ? e.dataTransfer.files.length : 3;
-        preview.innerHTML = '';
-        for (let i = 0; i < Math.min(items, 5); i++) {
-          const div = document.createElement('div');
-          div.className = 'upload-preview-item';
-          div.innerHTML = '🖼️';
-          const remove = document.createElement('div');
-          remove.className = 'remove';
-          remove.textContent = '×';
-          remove.onclick = function(e) { e.stopPropagation(); div.remove(); };
-          div.appendChild(remove);
-          preview.appendChild(div);
-        }
-      });
-
-      uploadBtn.addEventListener('click', function() { fileInput.click(); });
-      fileInput.addEventListener('change', function() {
-        if (this.files.length > 0) {
-          preview.innerHTML = '';
-          for (let i = 0; i < Math.min(this.files.length, 5); i++) {
-            const div = document.createElement('div');
-            div.className = 'upload-preview-item';
-            div.innerHTML = '🖼️';
-            const remove = document.createElement('div');
-            remove.className = 'remove';
-            remove.textContent = '×';
-            remove.onclick = function(e) { e.stopPropagation(); div.remove(); };
-            div.appendChild(remove);
-            preview.appendChild(div);
-          }
-        }
-      });
-    })();
-
-    // --- FAQ Accordion ---
-    function toggleFaq(el) {
-      const item = el.parentElement;
-      item.classList.toggle('active');
+  // --- Before/After Slider ---
+  var slider = document.getElementById('comparisonSlider');
+  if(slider){
+    var after = slider.querySelector('.after');
+    var handle = slider.querySelector('.comparison-handle');
+    var isDragging = false;
+    function setSlide(pct){
+      pct = Math.max(0,Math.min(100,pct));
+      if(after) after.style.clipPath = 'inset(0 '+(100-pct)+'% 0 0)';
+      if(after) after.style.webkitClipPath = 'inset(0 '+(100-pct)+'% 0 0)';
+      if(handle) handle.style.left = pct+'%';
     }
+    function getPos(e){
+      var rect = slider.getBoundingClientRect();
+      var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      return ((clientX - rect.left) / rect.width) * 100;
+    }
+    function onStart(e){ isDragging = true; setSlide(getPos(e)); }
+    function onMove(e){ if(!isDragging) return; e.preventDefault(); setSlide(getPos(e)); }
+    function onEnd(){ isDragging = false; }
+    slider.addEventListener('mousedown',onStart);
+    slider.addEventListener('touchstart',onStart,{passive:true});
+    document.addEventListener('mousemove',onMove);
+    document.addEventListener('touchmove',onMove,{passive:false});
+    document.addEventListener('mouseup',onEnd);
+    document.addEventListener('touchend',onEnd);
+    // init 50%
+    setSlide(50);
+  }
 
-    // --- Scroll Animation (Intersection Observer) ---
-    (function() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-          }
-        });
-      }, { threshold: 0.1 });
+  // --- Upload Zone ---
+  var zone = document.getElementById('uploadZone');
+  var fileInput = document.getElementById('fileInput');
+  var preview = document.getElementById('uploadPreview');
+  if(zone && fileInput){
+    zone.addEventListener('click',function(){ fileInput.click(); });
+    zone.addEventListener('dragover',function(e){ e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave',function(){ zone.classList.remove('dragover'); });
+    zone.addEventListener('drop',function(e){
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change',function(){
+      if(fileInput.files.length) handleFile(fileInput.files[0]);
+    });
+    function handleFile(file){
+      if(!file.type.startsWith('image/')) return;
+      preview.style.display = 'block';
+      preview.innerHTML = '<div style="padding:12px;background:rgba(124,58,237,0.08);border-radius:12px;font-size:13px;color:#a78bfa">✓ <strong>'+file.name+'</strong> ('+Math.round(file.size/1024)+' KB) selected — ready to process</div>';
+    }
+  }
 
-      document.querySelectorAll('.feature-card, .testimonial-card').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+  // --- FAQ Accordion ---
+  var faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(function(item){
+    var q = item.querySelector('.faq-question');
+    if(q){
+      q.addEventListener('click',function(){
+        var wasActive = item.classList.contains('active');
+        faqItems.forEach(function(i){ i.classList.remove('active'); });
+        if(!wasActive) item.classList.add('active');
       });
-    })();
-  </script>
+    }
+  });
+
+  // --- Smooth scroll for nav links (edge case) ---
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var target = document.querySelector(this.getAttribute('href'));
+      if(target){
+        e.preventDefault();
+        target.scrollIntoView({behavior:'smooth'});
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
