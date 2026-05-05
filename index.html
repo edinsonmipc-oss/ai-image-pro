@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Image Pro — Remove Backgrounds, Upscale & Transform Images with AI</title>
+  <meta name="description" content="AI Image Pro lets you remove backgrounds, upscale, and transform your images in seconds. Free 2 processes. One-time payment of $12.99 unlocks unlimited use forever.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* --- Reset & Base --- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f6f8fc;
+      color: #0b1a33;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* --- Layout --- */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .container--narrow {
+      max-width: 720px;
+    }
+
+    /* --- Buttons --- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .btn--primary {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+    }
+    .btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(37, 99, 235, 0.4);
+    }
+    .btn--primary:active {
+      transform: translateY(0);
+    }
+    .btn--secondary {
+      background: #fff;
+      color: #2563eb;
+      border: 2px solid #e2e8f0;
+    }
+    .btn--secondary:hover {
+      border-color: #2563eb;
+      background: #f0f6ff;
+    }
+    .btn--success {
+      background: #16a34a;
+      color: #fff;
+    }
+    .btn--success:hover {
+      background: #15803d;
+      transform: translateY(-2px);
+    }
+    .btn--block {
+      width: 100%;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* --- Navigation --- */
+    .nav {
+      padding: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav__logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+    }
+    .nav__logo svg {
+      flex-shrink: 0;
+    }
+    .nav__logo span {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav__cta {
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 22px;
+    }
+    @media (max-width: 480px) {
+      .nav__logo { font-size: 18px; }
+      .nav__cta { padding: 8px 16px; font-size: 13px; }
+    }
+
+    /* --- Hero --- */
+    .hero {
+      padding: 60px 0 40px;
+      text-align: center;
+    }
+    .hero__badge {
+      display: inline-block;
+      background: #e8f0fe;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 0.3px;
+    }
+    .hero__title {
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .hero__title span {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero__subtitle {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: #475569;
+      max-width: 600px;
+      margin: 0 auto 32px;
+      font-weight: 400;
+    }
+    .hero__actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero__trust {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .hero__trust-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #64748b;
+      font-weight: 500;
+    }
+    .hero__trust-item svg {
+      flex-shrink: 0;
+    }
+
+    /* --- Features / How It Works --- */
+    .features {
+      padding: 60px 0;
+    }
+    .section__label {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #2563eb;
+      margin-bottom: 8px;
+    }
+    .section__title {
+      text-align: center;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      margin-bottom: 12px;
+    }
+    .section__desc {
+      text-align: center;
+      color: #475569;
+      font-size: 17px;
+      max-width: 540px;
+      margin: 0 auto 48px;
+    }
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: #fff;
+      border: 1px solid #eef2f6;
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+      border-color: #cbd5e1;
+    }
+    .feature-card__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 24px;
+    }
+    .feature-card__icon--blue { background: #dbeafe; color: #2563eb; }
+    .feature-card__icon--purple { background: #ede9fe; color: #7c3aed; }
+    .feature-card__icon--green { background: #dcfce7; color: #16a34a; }
+    .feature-card__icon--amber { background: #fef3c7; color: #d97706; }
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    /* --- Tool Section (Upload + Process) --- */
+    .tool-section {
+      padding: 40px 0 60px;
+    }
+    .tool-card {
+      background: #fff;
+      border: 1px solid #eef2f6;
+      border-radius: 24px;
+      padding: 40px 32px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    }
+    @media (max-width: 480px) {
+      .tool-card { padding: 24px 16px; }
+    }
+
+    .upload-zone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #f8fafc;
+    }
+    .upload-zone:hover,
+    .upload-zone--dragover {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+    .upload-zone__icon {
+      font-size: 44px;
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+    .upload-zone h3 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .upload-zone p {
+      font-size: 14px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .upload-zone__hint {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 10px;
+    }
+
+    .file-info {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: #eff6ff;
+      border-radius: 12px;
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e40af;
+    }
+    .file-info__icon {
+      font-size: 20px;
+    }
+    .file-info__name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .file-info__remove {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #94a3b8;
+      padding: 4px;
+      line-height: 1;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .file-info__remove:hover {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    /* Operation selector */
+    .op-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .op-btn {
+      padding: 16px 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+      font-family: inherit;
+      transition: all 0.2s;
+      color: #334155;
+    }
+    .op-btn:hover {
+      border-color: #94a3b8;
+    }
+    .op-btn--selected {
+      border-color: #2563eb;
+      background: #eff6ff;
+      color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15);
+    }
+    .op-btn .op-btn__emoji {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .remaining {
+      text-align: center;
+      font-size: 14px;
+      color: #64748b;
+      margin: 16px 0 4px;
+    }
+
+    /* Result */
+    .result-box {
+      display: none;
+      margin-top: 24px;
+      padding: 24px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 16px;
+      text-align: center;
+    }
+    .result-box__icon {
+      font-size: 40px;
+      margin-bottom: 8px;
+    }
+    .result-box__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #166534;
+    }
+    .result-box__sub {
+      font-size: 14px;
+      color: #16a34a;
+      margin: 4px 0 16px;
+    }
+
+    .error-box {
+      display: none;
+      padding: 16px 20px;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 14px;
+      color: #991b1b;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 16px;
+    }
+
+    /* --- Pricing --- */
+    .pricing {
+      padding: 60px 0 80px;
+    }
+    .pricing__card {
+      max-width: 440px;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #2563eb;
+      border-radius: 24px;
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 8px 32px rgba(37, 99, 235, 0.1);
+    }
+    .pricing__popular {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 6px 20px;
+      border-radius: 20px;
+    }
+    .pricing__name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .pricing__desc {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+    .pricing__price {
+      font-size: 48px;
+      font-weight: 900;
+      color: #2563eb;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+    .pricing__price-sub {
+      font-size: 16px;
+      font-weight: 400;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .pricing__features {
+      list-style: none;
+      text-align: left;
+      margin: 28px 0;
+    }
+    .pricing__features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 15px;
+      color: #334155;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .pricing__features li:last-child {
+      border-bottom: none;
+    }
+    .pricing__features li svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .pricing__guarantee {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 20px;
+    }
+
+    /* --- How It Works (Steps) --- */
+    .steps {
+      padding: 60px 0;
+      background: #fff;
+      border-radius: 32px;
+      margin: 0 24px;
+    }
+    @media (min-width: 768px) {
+      .steps { margin: 0; }
+    }
+    .steps__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      counter-reset: step;
+    }
+    .step {
+      text-align: center;
+      position: relative;
+    }
+    .step__num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .step h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .step p {
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    /* --- FAQ --- */
+    .faq {
+      padding: 60px 0;
+    }
+    .faq__list {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .faq__item {
+      border-bottom: 1px solid #e2e8f0;
+      padding: 20px 0;
+    }
+    .faq__question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      color: #0b1a33;
+      user-select: none;
+    }
+    .faq__question::after {
+      content: "+";
+      font-size: 22px;
+      font-weight: 300;
+      color: #94a3b8;
+      transition: transform 0.3s;
+      margin-left: 12px;
+    }
+    .faq__question[aria-expanded="true"]::after {
+      content: "−";
+    }
+    .faq__answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      font-size: 15px;
+      color: #475569;
+      line-height: 1.7;
+    }
+    .faq__answer-inner {
+      padding-top: 12px;
+    }
+    .faq__question[aria-expanded="true"] + .faq__answer {
+      max-height: 400px;
+    }
+
+    /* --- Footer --- */
+    .footer {
+      text-align: center;
+      padding: 48px 0 40px;
+      color: #94a3b8;
+      font-size: 13px;
+      border-top: 1px solid #eef2f6;
+    }
+    .footer a {
+      color: #64748b;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .footer a:hover {
+      color: #2563eb;
+    }
+
+    /* --- Spinner --- */
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* --- Scroll margin for anchor --- */
+    #tool { scroll-margin-top: 24px; }
+    #pricing { scroll-margin-top: 24px; }
+  </style>
+</head>
+<body>
+
+  <nav class="container">
+    <div class="nav">
+      <div class="nav__logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="8" fill="url(#logo-grad)"/>
+          <path d="M7 14L11 10L15 14L21 8V20H7V14Z" fill="#fff" opacity="0.9"/>
+          <defs><linearGradient id="logo-grad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#2563eb"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>
+        </svg>
+        AI <span>Image Pro</span>
+      </div>
+      <a href="#pricing" class="btn btn--primary nav__cta">Get Unlimited</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero container container--narrow">
+    <div class="hero__badge">🔥 Used by 2,000+ creators</div>
+    <h1 class="hero__title">Transform Your Images with <span>AI</span></h1>
+    <p class="hero__subtitle">
+      Remove backgrounds, upscale resolution, and enhance your photos — all in seconds. No skills needed.
+    </p>
+    <div class="hero__actions">
+      <a href="#tool" class="btn btn--primary">Try It Free</a>
+      <a href="#pricing" class="btn btn--secondary">See Plans</a>
+    </div>
+    <div class="hero__trust">
+      <span class="hero__trust-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        2 free processes
+      </span>
+      <span class="hero__trust-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Secure & private
+      </span>
+      <span class="hero__trust-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Instant results
+      </span>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features container">
+    <p class="section__label">Features</p>
+    <h2 class="section__title">What You Can Do</h2>
+    <p class="section__desc">Powerful AI tools to make your images look their best.</p>
+    <div class="features__grid">
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--blue">🎨</div>
+        <h3>Remove Background</h3>
+        <p>Instantly cut out any subject from its background with pixel-perfect precision.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--purple">🔍</div>
+        <h3>Upscale Images</h3>
+        <p>Double or quadruple resolution while preserving sharpness and detail.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--green">⚡</div>
+        <h3>Lightning Fast</h3>
+        <p>AI processing in seconds. Upload, transform, download — three simple steps.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--amber">🔒</div>
+        <h3>100% Private</h3>
+        <p>Your images are processed securely and never stored permanently. We respect your privacy.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="container">
+    <div class="steps">
+      <p class="section__label">How It Works</p>
+      <h2 class="section__title">Three Simple Steps</h2>
+      <p class="section__desc">Get professional results in under a minute.</p>
+      <div class="steps__grid">
+        <div class="step">
+          <div class="step__num">1</div>
+          <h3>Upload Your Image</h3>
+          <p>Drag and drop or select a JPG, PNG, or WebP image up to 10 MB.</p>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <h3>Choose an Effect</h3>
+          <p>Pick remove background or upscale — our AI does the heavy lifting.</p>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <h3>Download & Enjoy</h3>
+          <p>Get your transformed image in seconds, ready to use anywhere.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool (Interactive Upload & Process) -->
+  <section id="tool" class="tool-section container container--narrow">
+    <div class="tool-card">
+      <!-- Upload Zone -->
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-zone__icon">🖼️</div>
+        <h3>Drop your image here</h3>
+        <p>or click to browse</p>
+        <p class="upload-zone__hint">JPG, PNG, WebP — Max 10 MB</p>
+        <input type="file" id="fileInput" accept="image/*" style="display:none">
+      </div>
+
+      <!-- Selected File Info -->
+      <div class="file-info" id="fileInfo">
+        <span class="file-info__icon">📄</span>
+        <span class="file-info__name" id="fileName"></span>
+        <button class="file-info__remove" id="removeFile" title="Remove file">✕</button>
+      </div>
+
+      <!-- Operation Selector -->
+      <div class="op-grid">
+        <button class="op-btn op-btn--selected" data-op="remove-bg">
+          <span class="op-btn__emoji">🎨</span>
+          Remove Background
+        </button>
+        <button class="op-btn" data-op="upscale">
+          <span class="op-btn__emoji">🔍</span>
+          Upscale Image
+        </button>
+      </div>
+
+      <p class="remaining" id="remaining">Free: <strong>2</strong> image processes remaining</p>
+
+      <button class="btn btn--primary btn--block" id="processBtn" onclick="processImage()">
+        Process Image
+      </button>
+
+      <!-- Error -->
+      <div class="error-box" id="errorBox"></div>
+
+      <!-- Result -->
+      <div class="result-box" id="resultBox">
+        <div class="result-box__icon">✅</div>
+        <div class="result-box__title">Your image is ready!</div>
+        <div class="result-box__sub">Download your processed image below</div>
+        <a class="btn btn--success" id="downloadBtn" href="#" download>Download Result</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="pricing container container--narrow">
+    <p class="section__label">Pricing</p>
+    <h2 class="section__title">Start Free, Upgrade Forever</h2>
+    <p class="section__desc">Try 2 processes on us. One payment unlocks unlimited use — no subscriptions, no surprises.</p>
+
+    <div class="pricing__card">
+      <div class="pricing__popular">Most Popular</div>
+      <h3 class="pricing__name">AI Image Pro</h3>
+      <p class="pricing__desc">Perfect for freelancers, creators, and small businesses</p>
+      <div class="pricing__price">$12.99</div>
+      <div class="pricing__price-sub">one-time payment · lifetime access</div>
+      <ul class="pricing__features">
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Unlimited image processing</span>
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Remove background &amp; upscale</span>
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>High-resolution downloads</span>
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Priority processing speed</span>
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>No subscription — pay once</span>
+        </li>
+      </ul>
+      <a href="https://buy.stripe.com/5kQ4gAeu79Gh8fB0d2eUU05" class="btn btn--primary btn--block" target="_blank" rel="noopener">
+        Buy Now — $12.99
+      </a>
+      <div class="pricing__guarantee">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Secure checkout via Stripe
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq container container--narrow">
+    <p class="section__label">FAQ</p>
+    <h2 class="section__title">Frequently Asked Questions</h2>
+    <div class="faq__list">
+      <div class="faq__item">
+        <div class="faq__question" role="button" tabindex="0" aria-expanded="false">How does the free trial work?</div>
+        <div class="faq__answer"><div class="faq__answer-inner">You get 2 free image processes with no credit card required. If you need more, upgrade to the Pro plan for a single one-time payment of $12.99.</div></div>
+      </div>
+      <div class="faq__item">
+        <div class="faq__question" role="button" tabindex="0" aria-expanded="false">What file formats are supported?</div>
+        <div class="faq__answer"><div class="faq__answer-inner">We support JPG, PNG, and WebP files up to 10 MB in size. More formats coming soon.</div></div>
+      </div>
+      <div class="faq__item">
+        <div class="faq__question" role="button" tabindex="0" aria-expanded="false">Is it really a one-time payment?</div>
+        <div class="faq__answer"><div class="faq__answer-inner">Yes! Pay $12.99 once and get unlimited image processing forever. No recurring subscriptions, no hidden fees.</div></div>
+      </div>
+      <div class="faq__item">
+        <div class="faq__question" role="button" tabindex="0" aria-expanded="false">Are my images private?</div>
+        <div class="faq__answer"><div class="faq__answer-inner">Absolutely. Images are processed temporarily and deleted immediately after. We never share or store your data.</div></div>
+      </div>
+      <div class="faq__item">
+        <div class="faq__question" role="button" tabindex="0" aria-expanded="false">Can I use these images commercially?</div>
+        <div class="faq__answer"><div class="faq__answer-inner">Yes. All processed images are yours to use for any purpose — personal or commercial. No attribution required.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer container">
+    <p>© 2025 <a href="#">AI Image Pro</a> · Made with ❤️ · Secure payments via <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a></p>
+  </footer>
+
+  <script>
+    // --- DOM refs ---
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const removeBtn = document.getElementById('removeFile');
+    const processBtn = document.getElementById('processBtn');
+    const remaining = document.getElementById('remaining');
+    const resultBox = document.getElementById('resultBox');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const errorBox = document.getElementById('errorBox');
+    const opBtns = document.querySelectorAll('.op-btn');
+
+    let selectedFile = null;
+    let processesRemaining = 2;
+
+    // --- Upload click ---
+    uploadZone.addEventListener('click', () => fileInput.click());
+
+    // --- Drag & drop ---
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('upload-zone--dragover');
+    });
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('upload-zone--dragover');
+    });
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('upload-zone--dragover');
+      if (e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
+    });
+
+    // --- File input ---
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) setFile(fileInput.files[0]);
+    });
+
+    // --- Remove file ---
+    removeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      clearFile();
+    });
+
+    function setFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showError('Please select an image file (JPG, PNG, WebP).');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        showError('File exceeds 10 MB limit. Please choose a smaller image.');
+        return;
+      }
+      selectedFile = file;
+      fileName.textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+      fileInfo.style.display = 'flex';
+      uploadZone.style.display = 'none';
+      hideError();
+    }
+
+    function clearFile() {
+      selectedFile = null;
+      fileInput.value = '';
+      fileInfo.style.display = 'none';
+      uploadZone.style.display = 'block';
+      resultBox.style.display = 'none';
+      hideError();
+    }
+
+    // --- Operation Selection ---
+    opBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        opBtns.forEach(b => b.classList.remove('op-btn--selected'));
+        btn.classList.add('op-btn--selected');
+      });
+    });
+
+    // --- Process Image ---
+    async function processImage() {
+      if (!selectedFile) {
+        showError('Please select an image first.');
+        return;
+      }
+
+      if (processesRemaining <= 0) {
+        showError('Free limit reached. Please upgrade to continue.');
+        document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+
+      processBtn.disabled = true;
+      processBtn.innerHTML = '<span class="spinner"></span> Processing...';
+      hideError();
+      resultBox.style.display = 'none';
+
+      const operation = document.querySelector('.op-btn--selected').dataset.op;
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+      formData.append('operation', operation);
+
+      try {
+        const res = await fetch('/process-image', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.success) {
+          processesRemaining = data.processes_remaining;
+          remaining.innerHTML = 'Free: <strong>' + processesRemaining + '</strong> image processes remaining';
+
+          downloadBtn.href = data.result_url;
+          resultBox.style.display = 'block';
+
+          if (processesRemaining <= 0) {
+            setTimeout(() => {
+              document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+            }, 600);
+          }
+        } else if (data.requires_payment) {
+          showError('Free limit reached. Upgrade to keep using AI Image Pro.');
+          processesRemaining = 0;
+          remaining.innerHTML = 'Free: <strong>0</strong> image processes remaining';
+          document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        } else {
+          showError(data.error || 'Image processing failed. Please try again.');
+        }
+      } catch (err) {
+        showError('Connection error. Please check your internet and try again.');
+      }
+
+      processBtn.disabled = false;
+      processBtn.textContent = 'Process Image';
+    }
+
+    // --- Error helpers ---
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+    }
+    function hideError() {
+      errorBox.style.display = 'none';
+      errorBox.textContent = '';
+    }
+
+    // --- FAQ accordion ---
+    document.querySelectorAll('.faq__question').forEach(q => {
+      q.addEventListener('click', () => {
+        const expanded = q.getAttribute('aria-expanded') === 'true';
+        q.setAttribute('aria-expanded', !expanded);
+      });
+      q.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          q.click();
+        }
+      });
+    });
+
+    // --- Smooth scroll for anchor links ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
